@@ -18,13 +18,15 @@ import (
 	"golang.org/x/image/math/fixed"
 )
 
-func getImages() *[]image.Image {
+func getImages() []image.Image {
 	then, _ := getThen()
 	now, _ := carbon.NowInLocation("Local")
-	timeBlocks := getDiffsBack(20, now, then)
+	size := 20
+	timeBlocks := getDiffsBack(size, now, then)
 
-	allImages := []image.Image{}
-	for _, tb := range *timeBlocks {
+	allImages := make([]image.Image, size)
+
+	for i, tb := range *timeBlocks {
 		curImg := createImageFrame()
 		days := tb.days
 		hours := tb.hours
@@ -32,10 +34,9 @@ func getImages() *[]image.Image {
 		seconds := tb.seconds
 		timeString := fmt.Sprintf("heyy %d:%d:%d:%d", days, hours, minutes, seconds)
 		drawText(curImg, timeString)
-		allImages = append(allImages, curImg)
+		allImages[i] = curImg
 	}
-
-	return &allImages
+	return allImages
 }
 
 func createImageFrame() *image.RGBA {
@@ -52,23 +53,21 @@ func createImageFrame() *image.RGBA {
 }
 
 func CreateBasicGif(out io.Writer, palette []*image.Paletted) {
-	delays := []int{}
-	i := 0
-	for i < len(palette) {
-		delays = append(delays, 100)
-		i++
+	delays := make([]int, len(palette))
+	for i := range palette {
+		delays[i] = 100
 	}
 	anim := gif.GIF{Delay: delays, Image: palette}
 
 	gif.EncodeAll(out, &anim)
 }
 
-func EncodeImgPaletted(images *[]image.Image) []*image.Paletted {
+func EncodeImgPaletted(images []image.Image) []*image.Paletted {
 	// Gif options
 	opt := gif.Options{}
-	g := []*image.Paletted{}
+	g := make([]*image.Paletted, 0, len(images))
 
-	for _, im := range *images {
+	for _, im := range images {
 		b := bytes.Buffer{}
 		// Write img2gif file to buffer.
 		err := gif.Encode(&b, im, &opt)
@@ -84,9 +83,10 @@ func EncodeImgPaletted(images *[]image.Image) []*image.Paletted {
 		}
 
 		// Cast img.
-		i, ok := img.(*image.Paletted)
+		theItem, ok := img.(*image.Paletted)
 		if ok {
-			g = append(g, i)
+			// g[idx] = theItem
+			g = append(g, theItem)
 		}
 	}
 	return g

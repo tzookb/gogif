@@ -3,6 +3,7 @@ package main
 // https://github.com/urfave/cli/blob/master/docs/v2/manual.md#getting-started
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -12,5 +13,6 @@ func main() {
 
 	f, _ := os.Create("image.gif")
 	defer f.Close()
-	CreateBasicGif(f, pallets)
+	fmt.Println(pallets)
+	// CreateBasicGif(f, pallets)
 }

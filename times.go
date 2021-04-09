@@ -37,12 +37,12 @@ func getDiff(from *carbon.Carbon, to *carbon.Carbon) TimeBlock {
 }
 
 func getDiffsBack(count int, from *carbon.Carbon, to *carbon.Carbon) *[]TimeBlock {
-	timeBlocks := []TimeBlock{}
+	timeBlocks := make([]TimeBlock, count)
 
 	i := 0
 	for i < count {
 		tb := getDiff(from, to)
-		timeBlocks = append(timeBlocks, tb)
+		timeBlocks[i] = tb
 		from = from.SubSecond()
 		i++
 	}

@@ -5,20 +5,18 @@ import (
 )
 
 func getColor(colorName string) color.RGBA {
-	if colorName == "black" {
+	switch colorName {
+	case "black":
 		return color.RGBA{0, 0, 0, 0xff}
-	}
-	if colorName == "white" {
+	case "white":
 		return color.RGBA{255, 255, 255, 0xff}
-	}
-	if colorName == "red" {
+	case "red":
 		return color.RGBA{0xFF, 0x00, 0x00, 0xFF}
-	}
-	if colorName == "green" {
+	case "green":
 		return color.RGBA{0x00, 0xFF, 0x00, 0xFF}
-	}
-	if colorName == "blue" {
+	case "blue":
 		return color.RGBA{0x00, 0x00, 0xFF, 0xFF}
+	default:
+		return color.RGBA{100, 200, 200, 0xff}
 	}
-	return color.RGBA{100, 200, 200, 0xff}
 }
